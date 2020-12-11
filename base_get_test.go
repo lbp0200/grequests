@@ -1298,3 +1298,22 @@ func verifyOkResponse(resp *Response, t *testing.T) *BasicGetResponse {
 
 	return myJSONStruct
 }
+
+func TestBenchTest(t *testing.T) {
+	NewDefaultHttpTransport()
+	ticker := time.NewTicker(time.Minute * 10)
+
+	for {
+		select {
+		case <-ticker.C:
+			return
+		default:
+			ro := &RequestOptions{}
+			if resp, err := Get("http://127.0.0.1:8088/system/health", ro); err == nil {
+				resp.ClearInternalBuffer()
+			} else {
+				t.Error(err.Error())
+			}
+		}
+	}
+}

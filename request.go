@@ -493,10 +493,15 @@ func BuildHTTPClient(ro RequestOptions) *http.Client {
 			cookieJar, _ = cookiejar.New(&cookiejar.Options{PublicSuffixList: publicsuffix.List})
 		}
 	}
-
+	var transport *http.Transport
+	if defaultHttpTransport == nil {
+		transport = createHTTPTransport(ro)
+	} else {
+		transport = defaultHttpTransport
+	}
 	return &http.Client{
 		Jar:       cookieJar,
-		Transport: createHTTPTransport(ro),
+		Transport: transport,
 		Timeout:   ro.RequestTimeout,
 	}
 }
